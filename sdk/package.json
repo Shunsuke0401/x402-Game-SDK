@@ -1,0 +1,65 @@
+{
+    "name": "@x402/sdk",
+    "version": "0.1.0",
+    "description": "SDK for x402 payments, leaderboards, and prize pools",
+    "main": "./dist/index.js",
+    "module": "./dist/index.mjs",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        },
+        "./server": {
+            "import": "./dist/server/index.mjs",
+            "require": "./dist/server/index.js",
+            "types": "./dist/server/index.d.ts"
+        },
+        "./react": {
+            "import": "./dist/react/index.mjs",
+            "require": "./dist/react/index.js",
+            "types": "./dist/react/index.d.ts"
+        },
+        "./core": {
+            "import": "./dist/core/index.mjs",
+            "require": "./dist/core/index.js",
+            "types": "./dist/core/index.d.ts"
+        },
+        "./contracts": {
+            "import": "./dist/contracts/index.mjs",
+            "require": "./dist/contracts/index.js",
+            "types": "./dist/contracts/index.d.ts"
+        }
+    },
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "lint": "eslint src/"
+    },
+    "dependencies": {
+        "x402-express": "latest",
+        "x402-fetch": "latest",
+        "@coinbase/x402": "^0.7.0",
+        "express": "^4.18.2",
+        "cors": "^2.8.5",
+        "viem": "^2.7.1",
+        "wagmi": "^2.5.7",
+        "@tanstack/react-query": "^5.25.0",
+        "ethers": "^6.11.1",
+        "dotenv": "^16.4.5"
+    },
+    "peerDependencies": {
+        "react": ">=18",
+        "react-dom": ">=18",
+        "express": ">=4"
+    },
+    "devDependencies": {
+        "tsup": "^8.0.2",
+        "typescript": "^5.3.3",
+        "@types/react": "^18.2.64",
+        "@types/express": "^4.17.21",
+        "@types/cors": "^2.8.17",
+        "@types/node": "^20.11.24"
+    }
+}

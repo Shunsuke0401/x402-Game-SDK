@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck (server)
+        run: pnpm --filter server exec tsc --noEmit
+
+      - name: Typecheck (client)
+        run: pnpm --filter client exec tsc --noEmit
+
+      - name: Build monorepo
+        run: pnpm build
+
+      - name: Upload build artifacts (client)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: client-dist
+          path: client/dist
+          if-no-files-found: ignore
+
+      - name: Upload build artifacts (server)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-dist
+          path: server/dist
+          if-no-files-found: ignore
