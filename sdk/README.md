@@ -1,4 +1,4 @@
-# @x402/sdk
+# g402
 
 The official SDK for adding x402 payments, leaderboards, and prize pools to any game.
 
@@ -12,7 +12,7 @@ The official SDK for adding x402 payments, leaderboards, and prize pools to any 
 ## Installation
 
 ```bash
-pnpm add @x402/sdk
+pnpm add g402
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ pnpm add @x402/sdk
 
 ```typescript
 import express from 'express';
-import { createPaymentRouter, createLeaderboardRoutes, loadConfig } from '@x402/sdk/server';
+import { createPaymentRouter, createLeaderboardRoutes, loadConfig } from 'g402/server';
 
 const app = express();
 const config = loadConfig(); // Reads from process.env
@@ -44,7 +44,7 @@ app.listen(3000, () => console.log('Server running on port 3000'));
 ### Client (React)
 
 ```tsx
-import { ConnectWalletButton, PayToPlayButton, Leaderboard } from '@x402/sdk/react';
+import { ConnectWalletButton, PayToPlayButton, Leaderboard } from 'g402/react';
 
 function App() {
   return (

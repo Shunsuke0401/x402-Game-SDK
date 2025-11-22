@@ -1,5 +1,5 @@
 // Main entry point
-// Users can import from @x402/sdk/server, @x402/sdk/react, etc.
+// Users can import from g402/server, g402/react, etc.
 // This main entry can export core types and utilities.
 
 export * from './core';

@@ -28,8 +28,17 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
     const [error, setError] = useState<string | null>(null);
 
     const handlePlay = async () => {
-        if (!isConnected || !walletClient) {
+        if (!isConnected) {
             setError('Please connect your wallet first');
+            return;
+        }
+
+        // If walletClient is missing but we are connected, try to wait briefly or proceed if we can get it via other means.
+        // However, x402-fetch needs a signer. 
+        // Let's provide a more specific error if walletClient is missing.
+        if (!walletClient) {
+            console.warn('PayToPlayButton: Wallet connected but no walletClient found. This might be a timing issue or connector issue.');
+            setError('Wallet client not ready. Please try again or reconnect.');
             return;
         }
 
@@ -71,9 +80,9 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
     };
 
     return (
-        <div className="x402-pay-container">
+        <div className="g402-pay-container">
             <button
-                className={`x402-pay-button ${className || ''}`}
+                className={`g402-pay-button ${className || ''}`}
                 style={style}
                 onClick={handlePlay}
                 disabled={isLoading || !isConnected}

@@ -46,7 +46,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({
     }
 
     return (
-        <div className={`x402-leaderboard ${className || ''}`} style={{ fontFamily: 'sans-serif' }}>
+        <div className={`g402-leaderboard ${className || ''}`} style={{ fontFamily: 'sans-serif' }}>
             <div style={{ marginBottom: '24px', padding: '16px', background: '#f8f9fa', borderRadius: '8px' }}>
                 <h3 style={{ marginTop: 0 }}>Prize Formula</h3>
                 <p style={{ fontSize: '14px', color: '#555' }}>

@@ -1,10 +1,10 @@
-# @x402/sdk
+# g402
 
 The official SDK for adding x402 payments, leaderboards, and prize pools to any game.
 
 ## Repository Structure
 
-- `sdk/`: The source code for the `@x402/sdk` package.
+- `sdk/`: The source code for the `g402` package.
 - `contracts/`: Reference Solidity contracts (PrizePool).
 - `examples/`: Example applications using the SDK.
   - `test-server/`: A minimal Express server demonstrating SDK integration.

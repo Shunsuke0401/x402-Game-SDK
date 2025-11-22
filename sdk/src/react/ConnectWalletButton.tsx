@@ -26,7 +26,7 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({ classN
 
     if (isConnected) {
         return (
-            <div className={`x402-wallet-connected ${className || ''}`} style={style}>
+            <div className={`g402-wallet-connected ${className || ''}`} style={style}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ fontWeight: 600 }}>
                         {ensName ? ensName : `${address?.slice(0, 6)}…${address?.slice(-4)}`}
@@ -49,7 +49,7 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({ classN
     }
 
     return (
-        <div className={`x402-wallet-connect ${className || ''}`} style={{ position: 'relative', ...style }}>
+        <div className={`g402-wallet-connect ${className || ''}`} style={{ position: 'relative', ...style }}>
             <button
                 onClick={() => setShowDropdown(!showDropdown)}
                 disabled={isPending}

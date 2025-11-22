@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import crypto from 'crypto';
 import { paymentMiddleware } from 'x402-express';
 import { createFacilitatorConfig } from '@coinbase/x402';
 import { SdkConfig } from '../core/types';
@@ -60,12 +61,13 @@ export function createPaymentRouter(config: SdkConfig): Router {
         // Actually x402-express usually terminates the request if it's a handshake.
         // If it's a verified request, it passes through.
 
+        // Generate a session ID for the new game session
+        const sessionId = crypto.randomUUID();
+
         res.status(200).json({
             success: true,
             message: 'Payment verified',
-            // In a real app, you might create a session here.
-            // The SDK user should probably add their own handler *after* this router 
-            // or we should allow passing a handler to createPaymentRouter.
+            sessionId
         });
     });
 

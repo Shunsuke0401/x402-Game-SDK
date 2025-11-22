@@ -1,5 +1,5 @@
 {
-    "name": "@x402/sdk",
+    "name": "g402",
     "version": "0.1.0",
     "description": "SDK for x402 payments, leaderboards, and prize pools",
     "main": "./dist/index.js",
