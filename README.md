@@ -1,83 +1,32 @@
-# Snake402
+# @x402/sdk
 
-A classic Snake game with x402 integration for pay-to-play and leaderboard rewards.
+The official SDK for adding x402 payments, leaderboards, and prize pools to any game.
 
-## Project Structure
+## Repository Structure
 
-```
-snake402/
-├── client/          # Phaser 3 + Vite + TypeScript frontend
-├── server/          # Express + TypeScript backend
-├── shared/          # Shared type definitions
-└── package.json     # Monorepo configuration
-```
+- `sdk/`: The source code for the `@x402/sdk` package.
+- `contracts/`: Reference Solidity contracts (PrizePool).
+- `examples/`: Example applications using the SDK.
+  - `test-server/`: A minimal Express server demonstrating SDK integration.
 
 ## Getting Started
 
-### Prerequisites
-- Node.js 20+
-- pnpm
+1. **Install dependencies**:
+   ```bash
+   pnpm install
+   ```
 
-### Installation
+2. **Build the SDK**:
+   ```bash
+   pnpm build
+   ```
 
-```bash
-# Install dependencies for all workspaces
-pnpm install
-```
+3. **Run the Test Server**:
+   ```bash
+   cd examples/test-server
+   pnpm start
+   ```
 
-### Development
+## Using the SDK in Your Project
 
-```bash
-# Run both client and server concurrently
-pnpm dev
-
-# Run client only (http://localhost:3000)
-pnpm dev:client
-
-# Run server only (http://localhost:3001)
-pnpm dev:server
-```
-
-### Client Environment
-
-- Create `client/.env` and set:
-  - `VITE_API_BASE_URL=http://localhost:3001`
-- In production (Vercel), set `VITE_API_BASE_URL` in the dashboard to your backend URL.
-
-### Building
-
-```bash
-# Build all packages
-pnpm build
-
-# Build individual packages
-pnpm build:client
-pnpm build:server
-pnpm build:shared
-```
-
-## API Endpoints
-
-### Server (http://localhost:3001)
-
-- `GET /health` - Health check endpoint
-- `GET /api` - API information
-
-### Planned Endpoints
-- `POST /api/join` - Join game session
-- `POST /api/verify-payment` - Verify x402 payment
-- `POST /api/submit-score` - Submit game score
-
-## Features
-
-### Phase 0 (Current)
-- ✅ Monorepo setup with pnpm workspaces
-- ✅ Client: Phaser 3 canvas with Play button
-- ✅ Server: Express with /health endpoint
-- ✅ Shared: Type definitions for future features
-
-### Planned Features
-- x402 payment integration
-- Snake game mechanics
-- Leaderboard system
-- Score submission and verification# S402
+See [sdk/README.md](./sdk/README.md) for detailed installation and usage instructions.

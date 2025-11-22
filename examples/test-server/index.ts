@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import { createPaymentRouter, createLeaderboardRoutes } from '@x402/sdk/dist/server';
-import { loadConfig } from '@x402/sdk/dist/core';
-import { SdkConfig, LeaderboardData, PlayerStats } from '@x402/sdk/dist/core';
-import { LeaderboardStore } from '@x402/sdk/dist/server';
+import { createPaymentRouter, createLeaderboardRoutes } from '@x402/sdk/server';
+import { loadConfig } from '@x402/sdk/core';
+import { SdkConfig, LeaderboardData, PlayerStats } from '@x402/sdk/core';
+import { LeaderboardStore } from '@x402/sdk/server';
 
 const app = express();
 const PORT = 3001;

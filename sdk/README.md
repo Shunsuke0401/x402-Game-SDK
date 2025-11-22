@@ -75,6 +75,11 @@ FACILITATOR_URL=https://x402.org/facilitator
 CORS_ORIGINS=http://localhost:5173
 ```
 
+## Examples
+
+Check the `examples/` directory in the repository for working examples.
+- **test-server**: A minimal Express server using the SDK.
+
 ## License
 
 MIT
