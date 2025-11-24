@@ -3,12 +3,10 @@ import { base, baseSepolia } from 'wagmi/chains'
 import { injected, metaMask } from 'wagmi/connectors'
 
 export const config = createConfig({
-    chains: [baseSepolia],
-    connectors: [
-        metaMask(),
-        injected(),
-    ],
+    chains: [base, baseSepolia],
+    connectors: [metaMask(), injected()],
     transports: {
+        [base.id]: http(),
         [baseSepolia.id]: http(),
     },
 })
