@@ -33,14 +33,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build SDK
+        run: pnpm --filter @mark_nakatani/g402 build
+
       - name: Typecheck (test-server)
         run: pnpm --filter test-server exec tsc --noEmit
 
       - name: Typecheck (test-client)
         run: pnpm --filter test-client exec tsc --noEmit
-
-      - name: Build SDK
-        run: pnpm --filter @mark_nakatani/g402 build
 
       - name: Build example client
         run: pnpm --filter test-client build

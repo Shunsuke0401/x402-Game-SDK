@@ -104,7 +104,7 @@ app.get('/', (req, res) => {
 });
 
 // Start Payout Scheduler (Optional)
-import { PayoutService } from 'g402/server';
+import { PayoutService } from '@mark_nakatani/g402/server';
 const payoutService = new PayoutService(config, store);
 payoutService.start();
 
