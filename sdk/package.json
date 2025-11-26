@@ -1,6 +1,6 @@
 {
-    "name": "g402",
-    "version": "0.1.1",
+    "name": "@mark_nakatani/g402",
+    "version": "0.1.2",
     "description": "SDK for x402 payments, leaderboards, and prize pools",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",

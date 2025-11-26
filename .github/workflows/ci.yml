@@ -37,7 +37,7 @@ jobs:
         run: pnpm --filter test-client exec tsc --noEmit
 
       - name: Build SDK
-        run: pnpm --filter g402 build
+        run: pnpm --filter @mark_nakatani/g402 build
 
       - name: Build example client
         run: pnpm --filter test-client build

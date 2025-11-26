@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import { createPaymentRouter, createLeaderboardRoutes } from 'g402/server';
-import { loadConfig } from 'g402/core';
-import { SdkConfig, LeaderboardData, PlayerStats } from 'g402/core';
-import { LeaderboardStore } from 'g402/server';
+import { createPaymentRouter, createLeaderboardRoutes } from '@mark_nakatani/g402/server';
+import { loadConfig } from '@mark_nakatani/g402/core';
+import { SdkConfig, LeaderboardData, PlayerStats } from '@mark_nakatani/g402/core';
+import { LeaderboardStore } from '@mark_nakatani/g402/server';
 
 const app = express();
 const PORT = 3001;

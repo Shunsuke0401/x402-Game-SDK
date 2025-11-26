@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAccount } from 'wagmi'
-import { ConnectWalletButton, PayToPlayButton, Leaderboard } from 'g402/react'
+import { ConnectWalletButton, PayToPlayButton, Leaderboard } from '@mark_nakatani/g402/react'
 
 function App() {
     const [sessionId, setSessionId] = useState<string | null>(null)
