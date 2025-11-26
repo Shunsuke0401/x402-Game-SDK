@@ -11,7 +11,13 @@ export function createPaymentRouter(config: SdkConfig): Router {
         throw new Error('createPaymentRouter: Missing CDP_RECIPIENT_ADDRESS or PRIZE_POOL_CONTRACT in config');
     }
 
+    console.log('DEBUG: Payment Router Config:', {
+        prizePoolContract: config.prizePoolContract,
+        cdpRecipientAddress: config.cdpRecipientAddress
+    });
+
     const recipient = (config.prizePoolContract || config.cdpRecipientAddress) as `0x${string}`;
+    console.log('DEBUG: Selected Recipient:', recipient);
     const isMainnet = config.cdpNetwork === 'base';
 
     const paymentConfig = {

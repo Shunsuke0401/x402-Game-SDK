@@ -91,9 +91,39 @@ app.post('/api/submit-score', (req, res) => {
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Test Server Running</h1>
+        <p>Available endpoints:</p>
+        <ul>
+            <li><a href="/health">/health</a> - Server health check</li>
+            <li><a href="/api/leaderboard/daily/total">/api/leaderboard/daily/total</a> - Daily Total Leaderboard</li>
+            <li><a href="/api/leaderboard/daily/high">/api/leaderboard/daily/high</a> - Daily High Score Leaderboard</li>
+        </ul>
+    `);
+});
+
+// Start Payout Scheduler (Optional)
+import { PayoutService } from 'g402/server';
+const payoutService = new PayoutService(config, store);
+payoutService.start();
+
+// Helper to trigger payout manually (for testing)
+app.post('/api/payout/trigger', async (req, res) => {
+    console.log('Received manual payout trigger request');
+    try {
+        await payoutService.triggerPayout();
+        res.json({ success: true, message: 'Payout triggered' });
+    } catch (error) {
+        console.error('Manual payout trigger failed:', error);
+        res.status(500).json({ error: 'Payout failed', details: error instanceof Error ? error.message : String(error) });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`✅ Test server running on http://localhost:${PORT}`);
     console.log(`   - Health: http://localhost:${PORT}/health`);
     console.log(`   - Leaderboard: http://localhost:${PORT}/api/leaderboard/daily/total`);
     console.log(`   - Join (POST): http://localhost:${PORT}/api/join`);
+    console.log(`   - Payout Trigger (POST): http://localhost:${PORT}/api/payout/trigger`);
 });

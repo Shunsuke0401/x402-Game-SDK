@@ -69,6 +69,25 @@ function App() {
                     <h2>2. Leaderboard</h2>
                     <Leaderboard apiBaseUrl={API_BASE_URL} />
                 </section>
+
+                <section style={{ marginTop: '40px', padding: '20px', border: '1px solid #eee', borderRadius: '8px', background: '#f9f9f9' }}>
+                    <h2>3. Admin / Payouts</h2>
+                    <p>Trigger the payout cycle manually (requires server env configuration).</p>
+                    <button
+                        onClick={async () => {
+                            try {
+                                const res = await fetch(`${API_BASE_URL}/payout/trigger`, { method: 'POST' });
+                                const data = await res.json();
+                                alert(JSON.stringify(data, null, 2));
+                            } catch (e) {
+                                alert('Error triggering payout: ' + e);
+                            }
+                        }}
+                        style={{ padding: '12px 24px', fontSize: '16px', cursor: 'pointer', background: '#333', color: 'white', border: 'none', borderRadius: '4px' }}
+                    >
+                        Trigger Payout Cycle
+                    </button>
+                </section>
             </main>
         </div>
     )

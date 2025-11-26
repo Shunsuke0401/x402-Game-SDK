@@ -134,63 +134,81 @@ Deployments (Vercel/Render) will update automatically on push.
 - Verify admin token blocks unauthorized requests
 - Confirm HTTPS and CORS behavior
 
-## Smart Contract (Remix)
+## Smart Contract Requirements
 
-Use Remix to deploy `contracts/PrizePool.sol` on Base.
+The SDK requires a Prize Pool smart contract deployed on Base (Mainnet or Sepolia) with the following interface:
 
-### Steps
-- Open https://remix.ethereum.org
-- Create a file `contracts/PrizePool.sol` and paste the contract source from this repo.
-- In "Solidity Compiler":
-  - Version: `0.8.20`
-  - Optimization: Enabled (e.g., 200 runs)
-- In "Deploy & Run Transactions":
-  - Environment: `Injected Provider - MetaMask`
-  - Network: Base Mainnet (`chainId 8453`) or Base Sepolia for testing (`chainId 84532`)
-  - Constructor args:
-    - `USDC_CONTRACT`: Base USDC address
-    - `TREASURY_ADDRESS`: Your treasury wallet
-  - Deploy and confirm in MetaMask
+### Required Contract Functions
 
-### After Deploy
-- Copy the deployed address and set in `.env`:
-  - `PRIZE_POOL_CONTRACT=0xYourDeployedAddress`
-- Ensure server env is configured:
-  - `PRIVATE_KEY`: Must be the deployer/owner address; only owner can call `endCycle`
-  - `ENABLE_ONCHAIN_PAYOUTS=true`
-  - `BASE_RPC_URL=https://mainnet.base.org` (or provider URL)
-  - `USDC_CONTRACT=0x833589f...`
-  - `TREASURY_ADDRESS=0x...`
-- Restart the server so x402 routes entry fees to the contract and the 24h scheduler can call `endCycle`.
+Your contract **must** implement these functions for the SDK to work properly:
+
+```solidity
+// Read-only functions
+function owner() external view returns (address);
+function usdc() external view returns (address);
+function treasury() external view returns (address);
+
+// State-changing functions (owner-only)
+function endCycle(address[] calldata winners, uint256[] calldata rewards) external;
+function deposit(uint256 amount) external;
+function setTreasury(address _treasury) external;
+function withdrawTo(address recipient, uint256 amount) external;
+function withdrawTreasury(uint256 amount) external;
+```
+
+### Contract Setup
+
+1. **Deploy your Prize Pool contract** to Base Mainnet or Base Sepolia
+   - You can use any deployment method (Hardhat, Foundry, Remix, etc.)
+   - The contract must accept USDC address and treasury address in the constructor
+   - Example: `constructor(address _usdc, address _treasury)`
+
+2. **Configure your `.env` file:**
+   ```bash
+   # Network Configuration
+   CDP_NETWORK=base                    # or 'base-sepolia' for testnet
+   BASE_RPC_URL=https://mainnet.base.org  # or your RPC provider URL
+   
+   # Contract Addresses
+   PRIZE_POOL_CONTRACT=0xYourDeployedContractAddress
+   TREASURY_ADDRESS=0xYourTreasuryWalletAddress
+   
+   # Payout Configuration
+   ENABLE_ONCHAIN_PAYOUTS=true
+   PRIVATE_KEY=0xYourPrivateKey      # Must be the contract owner's private key
+   PAYOUT_INTERVAL_MS=86400000       # 24 hours in milliseconds
+   ```
+
+3. **Important Requirements:**
+   - The `PRIVATE_KEY` wallet **must be the contract owner** (the address that deployed it)
+   - The wallet needs ETH on Base Mainnet/Sepolia for gas fees
+   - The contract needs USDC balance to distribute payouts
+   - Set `CDP_RECIPIENT_ADDRESS` to your Prize Pool contract address so entry fees go to the contract
 
 ### Verification
-- View the contract on BaseScan and check:
-  - `owner()` equals your deployer address
-  - `usdc()` and `treasury()` reflect constructor values
-- Optionally verify source on BaseScan using the same compiler and optimization settings.
 
-### Remix Import Notes
-- The contract imports `@openzeppelin/contracts/token/ERC20/IERC20.sol`.
-- If Remix cannot resolve npm imports:
-  - In Remix, install the library via the Libraries panel (`@openzeppelin/contracts@5.x`), or
-  - Temporarily replace the import with a minimal local interface:
+After deployment, verify your setup:
 
-```solidity
-// contracts/IERC20.sol (fallback for Remix only)
-pragma solidity ^0.8.20;
-interface IERC20 {
-    function transfer(address to, uint256 amount) external returns (bool);
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
-}
-```
+1. **Check contract on BaseScan:**
+   - Mainnet: `https://basescan.org/address/0xYourContractAddress`
+   - Sepolia: `https://sepolia.basescan.org/address/0xYourContractAddress`
 
-Then update the import in `PrizePool.sol` during Remix deployment:
+2. **Verify ownership:**
+   ```bash
+   # The owner() function should return your wallet address
+   # You can check this on BaseScan's "Read Contract" tab
+   ```
 
-```solidity
-import "./IERC20.sol";
-```
+3. **Test the payout trigger:**
+   - Start your server
+   - Submit some test scores
+   - Click "Trigger Payout Cycle" in the admin panel
+   - Check the server logs for transaction hash
+   - Verify the transaction on BaseScan
 
-Note: Keep the original OpenZeppelin import in the repository; use the fallback only inside Remix if needed.
+### Contract Reference
+
+A reference implementation is available in `sdk/src/contracts/index.ts` which exports the `PRIZE_POOL_ABI`. Your contract should match this interface.
 
 ## HTTPS Configuration
 

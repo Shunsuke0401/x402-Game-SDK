@@ -1,4 +1,12 @@
 import { SdkConfig } from './types';
+import dotenv from 'dotenv';
+import path from 'node:path';
+dotenv.config();
+dotenv.config({ path: '.env.development' });
+dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../.env.development') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env.development') });
 
 export const DEFAULT_CONFIG: Partial<SdkConfig> = {
     entryFeeUSDC: '0.001',

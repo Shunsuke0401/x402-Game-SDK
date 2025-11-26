@@ -21,8 +21,8 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
     children
 }) => {
     const { isConnected } = useAccount();
-    const { data: walletClient } = useWalletClient();
     const chainId = useChainId();
+    const { data: walletClient, isLoading: isWalletLoading, refetch: refetchWallet } = useWalletClient({ chainId });
     const { switchChain } = useSwitchChain();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -33,13 +33,19 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
             return;
         }
 
-        // If walletClient is missing but we are connected, try to wait briefly or proceed if we can get it via other means.
-        // However, x402-fetch needs a signer. 
-        // Let's provide a more specific error if walletClient is missing.
-        if (!walletClient) {
-            console.warn('PayToPlayButton: Wallet connected but no walletClient found. This might be a timing issue or connector issue.');
-            setError('Wallet client not ready. Please try again or reconnect.');
+        if (isWalletLoading) {
+            setError('Wallet is initializing. Please wait...');
             return;
+        }
+
+        let effectiveWalletClient = walletClient;
+        if (!effectiveWalletClient) {
+            const result = await refetchWallet();
+            effectiveWalletClient = result.data as any;
+            if (!effectiveWalletClient) {
+                setError('Wallet client not ready. Please try disconnecting and reconnecting, or click "Retry Wallet".');
+                return;
+            }
         }
 
         setIsLoading(true);
@@ -51,7 +57,7 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
             // But x402-fetch handles the chain switching request if the facilitator demands it? 
             // Actually x402-fetch just signs. The facilitator might reject if on wrong chain.
 
-            const fetchWithPay = wrapFetchWithPayment(fetch as any, walletClient as any);
+            const fetchWithPay = wrapFetchWithPayment(fetch as any, effectiveWalletClient as any);
             const joinUrl = `${apiBaseUrl.replace(/\/+$/, '')}/join`;
 
             const response = await fetchWithPay(joinUrl, {
@@ -79,6 +85,8 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
         }
     };
 
+    const isReady = isConnected && !!walletClient;
+
     return (
         <div className="g402-pay-container">
             <button
@@ -87,13 +95,23 @@ export const PayToPlayButton: React.FC<PayToPlayButtonProps> = ({
                 onClick={handlePlay}
                 disabled={isLoading || !isConnected}
             >
-                {isLoading ? 'Processing...' : children || `Pay ${entryFeeUSDC ? `$${entryFeeUSDC}` : ''} to Play`}
+                {isLoading ? 'Processing...' :
+                    isWalletLoading ? 'Initializing Wallet...' :
+                        children || `Pay ${entryFeeUSDC ? `$${entryFeeUSDC}` : ''} to Play`}
             </button>
             {error && (
                 <div style={{ color: 'red', fontSize: '12px', marginTop: '8px' }}>
                     {error}
                 </div>
             )}
+            <div style={{ marginTop: '10px', fontSize: '10px', color: '#666', border: '1px solid #ccc', padding: '5px' }}>
+                <strong>Debug Info:</strong><br />
+                Connected: {isConnected ? 'Yes' : 'No'}<br />
+                Wallet Loading: {isWalletLoading ? 'Yes' : 'No'}<br />
+                Wallet Client: {walletClient ? 'Ready' : 'Missing'}<br />
+                Chain ID: {chainId}<br />
+                <button onClick={() => refetchWallet()} style={{ marginTop: '5px', fontSize: '10px' }}>Retry Wallet</button>
+            </div>
         </div>
     );
 };
