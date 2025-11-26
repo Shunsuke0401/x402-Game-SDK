@@ -1,0 +1,41 @@
+name: Publish SDK to npm
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish (ensure sdk/package.json matches)"
+        required: false
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build SDK
+        run: pnpm --filter g402 build
+
+      - name: Publish to npm
+        working-directory: sdk
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

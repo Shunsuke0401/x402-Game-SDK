@@ -1,6 +1,6 @@
 {
     "name": "g402",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "SDK for x402 payments, leaderboards, and prize pools",
     "main": "./dist/index.js",
     "module": "./dist/index.mjs",
@@ -35,8 +35,12 @@
     "scripts": {
         "build": "tsup",
         "dev": "tsup --watch",
-        "lint": "eslint src/"
+        "lint": "eslint src/",
+        "prepublishOnly": "pnpm build"
     },
+    "files": [
+        "dist"
+    ],
     "dependencies": {
         "x402-express": "latest",
         "x402-fetch": "latest",
