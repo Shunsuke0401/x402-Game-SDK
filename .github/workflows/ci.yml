@@ -22,32 +22,30 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 10
+
+      - name: Verify pnpm
+        run: pnpm -v
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Typecheck (server)
-        run: pnpm --filter server exec tsc --noEmit
+      - name: Typecheck (test-server)
+        run: pnpm --filter test-server exec tsc --noEmit
 
-      - name: Typecheck (client)
-        run: pnpm --filter client exec tsc --noEmit
+      - name: Typecheck (test-client)
+        run: pnpm --filter test-client exec tsc --noEmit
 
-      - name: Build monorepo
-        run: pnpm build
+      - name: Build SDK
+        run: pnpm --filter g402 build
 
-      - name: Upload build artifacts (client)
+      - name: Build example client
+        run: pnpm --filter test-client build
+
+      - name: Upload build artifacts (example client)
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: client-dist
-          path: client/dist
-          if-no-files-found: ignore
-
-      - name: Upload build artifacts (server)
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: server-dist
-          path: server/dist
+          name: test-client-dist
+          path: examples/test-client/dist
           if-no-files-found: ignore
