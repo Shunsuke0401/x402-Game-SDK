@@ -10,6 +10,14 @@ export interface GameSession {
     createdAt: Date;
     paidAt?: Date;
     wallet?: string;
+    scoreSubmitted?: boolean;
+}
+
+export interface SessionStore {
+    createSession(id: string): Promise<void>;
+    markAsPaid(id: string, wallet?: string): Promise<void>;
+    getSession(id: string): Promise<GameSession | null>;
+    markScoreSubmitted(id: string): Promise<void>;
 }
 
 export interface LeaderboardEntry {

@@ -75,6 +75,59 @@ FACILITATOR_URL=https://x402.org/facilitator
 CORS_ORIGINS=http://localhost:5173
 ```
 
+
+## Security & Anti-Bot
+
+## Security & Anti-Bot
+
+The SDK provides built-in tools to help secure your game.
+
+### 1. Rate Limiting
+Prevent spam by rate-limiting your API endpoints using the built-in helper.
+
+```typescript
+import { createRateLimiter } from 'g402/server';
+
+// Limit to 100 requests per 15 minutes
+app.use('/api/', createRateLimiter());
+```
+
+### 2. Session Validation
+Ensure that a score can only be submitted once per paid session.
+
+1. Implement the `SessionStore` interface (or use a database adapter).
+2. Pass the store to `createPaymentRouter` to track new sessions.
+3. Use `verifySession` middleware to protect your score submission endpoint.
+
+```typescript
+import { createPaymentRouter, verifySession, SessionStore } from 'g402/server';
+
+// Example in-memory store (use a real DB in production)
+const sessions = new Map();
+const sessionStore: SessionStore = {
+    async createSession(id) { sessions.set(id, { id, isPaid: false, createdAt: new Date() }); },
+    async markAsPaid(id) { const s = sessions.get(id); if(s) s.isPaid = true; },
+    async getSession(id) { return sessions.get(id) || null; },
+    async markScoreSubmitted(id) { const s = sessions.get(id); if(s) s.scoreSubmitted = true; }
+};
+
+// 1. Mount payment router with store
+app.use('/api', createPaymentRouter(config, sessionStore));
+
+// 2. Protect score submission
+app.post('/api/submit-score', verifySession(sessionStore), async (req, res) => {
+    const { sessionId, score } = req.body;
+    
+    // Session is already verified and attached to req.gameSession
+    // Save score logic here...
+    
+    // Mark session as used
+    await sessionStore.markScoreSubmitted(sessionId);
+    
+    res.json({ success: true });
+});
+```
+
 ## Examples
 
 Check the `examples/` directory in the repository for working examples.
