@@ -36,6 +36,7 @@
         "build": "tsup",
         "dev": "tsup --watch",
         "lint": "eslint src/",
+        "test": "vitest run",
         "prepublishOnly": "pnpm build"
     },
     "files": [
