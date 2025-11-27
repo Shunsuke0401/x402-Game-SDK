@@ -1,5 +1,9 @@
 # g402
 
+[![npm version](https://img.shields.io/npm/v/@mark_nakatani/g402.svg)](https://www.npmjs.com/package/@mark_nakatani/g402)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Downloads](https://img.shields.io/npm/dm/@mark_nakatani/g402.svg)](https://www.npmjs.com/package/@mark_nakatani/g402)
+
 The official SDK for adding x402 payments, leaderboards, and prize pools to any game.
 
 ## Features
