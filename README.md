@@ -6,9 +6,6 @@ The official SDK for adding x402 payments, leaderboards, and prize pools to any 
 
 - `sdk/`: The source code for the `g402` package.
 - `contracts/`: Reference Solidity contracts (PrizePool).
-- `examples/`: Example applications using the SDK.
-  - `test-server/`: A minimal Express server demonstrating SDK integration.
-
 ## Getting Started
 
 1. **Install dependencies**:
@@ -19,12 +16,6 @@ The official SDK for adding x402 payments, leaderboards, and prize pools to any 
 2. **Build the SDK**:
    ```bash
    pnpm build
-   ```
-
-3. **Run the Test Server**:
-   ```bash
-   cd examples/test-server
-   pnpm start
    ```
 
 ## Using the SDK in Your Project

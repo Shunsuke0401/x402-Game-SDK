@@ -78,8 +78,6 @@ CORS_ORIGINS=http://localhost:5173
 
 ## Security & Anti-Bot
 
-## Security & Anti-Bot
-
 The SDK provides built-in tools to help secure your game.
 
 ### 1. Rate Limiting
@@ -128,10 +126,7 @@ app.post('/api/submit-score', verifySession(sessionStore), async (req, res) => {
 });
 ```
 
-## Examples
 
-Check the `examples/` directory in the repository for working examples.
-- **test-server**: A minimal Express server using the SDK.
 
 ## License
 
