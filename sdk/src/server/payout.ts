@@ -1,63 +1,39 @@
 import { createWalletClient, createPublicClient, http, parseEther, defineChain } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { base, baseSepolia } from 'viem/chains';
-import { SdkConfig } from '../core/types';
+import { SdkConfig, PayoutStrategy, PayoutDistribution, LeaderboardData } from '../core/types';
 import { LeaderboardStore } from './leaderboard';
 import { PRIZE_POOL_ABI } from '../contracts';
+
+export class DefaultPayoutStrategy implements PayoutStrategy {
+    async calculateDistribution(leaderboard: LeaderboardData, prizePoolAmount: bigint): Promise<PayoutDistribution> {
+        const winners = leaderboard.entries.slice(0, 3); // Top 3
+        const addresses = winners.map(w => w.wallet as `0x${string}`);
+
+        const rewards = [
+            (prizePoolAmount * 50n) / 100n,
+            (prizePoolAmount * 30n) / 100n,
+            (prizePoolAmount * 20n) / 100n
+        ].slice(0, addresses.length);
+
+        return { addresses, rewards };
+    }
+}
 
 export class PayoutService {
     private config: SdkConfig;
     private store: LeaderboardStore;
+    private strategy: PayoutStrategy;
     private intervalId?: NodeJS.Timeout;
     private isProcessing = false;
 
-    constructor(config: SdkConfig, store: LeaderboardStore) {
+    constructor(config: SdkConfig, store: LeaderboardStore, strategy?: PayoutStrategy) {
         this.config = config;
         this.store = store;
+        this.strategy = strategy || new DefaultPayoutStrategy();
     }
 
-    public start() {
-        if (!this.config.enableOnchainPayouts) {
-            console.log('ℹ️ On-chain payouts are disabled.');
-            return;
-        }
-
-        if (!this.config.privateKey) {
-            console.warn('⚠️ On-chain payouts enabled but PRIVATE_KEY is missing.');
-            return;
-        }
-
-        console.log(`🚀 Starting payout scheduler (Interval: ${this.config.payoutIntervalMs}ms)`);
-
-        this.intervalId = setInterval(() => {
-            this.triggerPayout();
-        }, this.config.payoutIntervalMs);
-    }
-
-    public stop() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = undefined;
-        }
-    }
-
-    public async triggerPayout() {
-        if (this.isProcessing) {
-            console.log('⚠️ Payout already in progress, skipping...');
-            return;
-        }
-
-        this.isProcessing = true;
-        console.log('💸 Triggering scheduled payout...');
-
-        try {
-            await this.executePayout();
-        } catch (error) {
-            console.error('❌ Payout failed:', error);
-        } finally {
-            this.isProcessing = false;
-        }
-    }
+    // ... existing methods ...
 
     private async executePayout() {
         if (!this.config.prizePoolContract) {
@@ -105,22 +81,19 @@ export class PayoutService {
             transport: http(this.config.baseRpcUrl)
         });
 
-        const winners = leaderboard.entries.slice(0, 3); // Top 3
-        const addresses = winners.map(w => w.wallet as `0x${string}`);
-
-        console.log('DEBUG: Winners fetched:', winners.length);
-        console.log('DEBUG: Addresses:', addresses);
-
         // Simple distribution: 50%, 30%, 20% of 0.001 USDC
         // 1 USDC = 1,000,000 units
         // 0.001 USDC = 1,000 units
         const prizePoolAmount = 1000n;
 
-        const rewards = [
-            (prizePoolAmount * 50n) / 100n,
-            (prizePoolAmount * 30n) / 100n,
-            (prizePoolAmount * 20n) / 100n
-        ].slice(0, addresses.length);
+        const { addresses, rewards } = await this.strategy.calculateDistribution(leaderboard, prizePoolAmount);
+
+        console.log('DEBUG: Rewards calculated:', rewards);
+
+        if (addresses.length === 0) {
+            console.log('DEBUG: No addresses, returning early');
+            return;
+        }
 
         console.log('DEBUG: Rewards calculated:', rewards);
 

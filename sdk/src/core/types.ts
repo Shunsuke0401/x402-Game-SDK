@@ -59,3 +59,12 @@ export interface SdkConfig {
     baseRpcUrl?: string;
     privateKey?: string;
 }
+
+export type PayoutDistribution = {
+    addresses: `0x${string}`[];
+    rewards: bigint[];
+};
+
+export interface PayoutStrategy {
+    calculateDistribution(leaderboard: LeaderboardData, prizePoolAmount: bigint): Promise<PayoutDistribution>;
+}
