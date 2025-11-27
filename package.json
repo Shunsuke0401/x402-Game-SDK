@@ -1,23 +1,16 @@
 {
-  "name": "snake402",
+  "name": "x402-game-sdk",
   "version": "1.0.0",
-  "description": "Snake402 - A classic Snake game with x402 integration for pay-to-play and leaderboard rewards",
+  "description": "Official SDK for adding x402 payments, leaderboards, and prize pools to any game.",
   "private": true,
   "workspaces": [
-    "client",
-    "server",
-    "shared"
+    "sdk"
   ],
   "scripts": {
-    "dev": "concurrently \"pnpm dev:client\" \"pnpm dev:server\"",
-    "dev:client": "pnpm --filter client dev",
-    "dev:server": "pnpm --filter server dev",
-    "start": "pnpm --filter @snake402/server start",
-    "build": "pnpm --filter shared build && pnpm --filter client build && pnpm --filter server build",
-    "build:client": "pnpm --filter client build",
-    "build:server": "pnpm --filter server build",
-    "build:shared": "pnpm --filter shared build",
-    "postinstall": "pnpm --filter @snake402/server rebuild sqlite3 --update-binary || npm rebuild sqlite3 --update-binary"
+    "build": "pnpm --filter @mark_nakatani/g402 build",
+    "dev": "pnpm --filter @mark_nakatani/g402 dev",
+    "lint": "pnpm --filter @mark_nakatani/g402 lint",
+    "test": "pnpm --filter @mark_nakatani/g402 test"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
