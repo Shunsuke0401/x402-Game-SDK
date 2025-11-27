@@ -444,6 +444,13 @@ If you're contributing to the SDK itself:
   - `src/contracts/`: Contract ABIs and utilities
 - `contracts/`: Reference Solidity contracts (PrizePool)
 
+## Disclaimer
+⚠️ **Disclaimer: Experimental Software**
+
+This SDK is designed as a starter kit to help developers explore and implement Pay-to-Play and Play-to-Earn systems. Please be aware that this project is developed and maintained solely by Mark Nakatani.
+
+While it provides a functional foundation, it does not guarantee production-grade security, concurrency handling, or financial safety. This software has not been audited. If you plan to handle real funds in a production environment, you should review and secure the code accordingly. Use at your own risk.
+
 ## License
 
 MIT
