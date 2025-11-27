@@ -128,6 +128,23 @@ app.post('/api/submit-score', verifySession(sessionStore), async (req, res) => {
 
 
 
+## Payout System
+The SDK includes a `PayoutService` that automates the distribution of prize pools to leaderboard winners.
+
+### Smart Contract Requirements
+
+To use the automated payout system, you need a smart contract deployed on Base (or Base Sepolia) that adheres to the following interface:
+
+1.  **Ownership**: The contract must have an `owner()` function. The wallet used by the `PayoutService` (configured via `PRIVATE_KEY`) must be the owner of the contract.
+2.  **End Cycle Function**: The contract must implement an `endCycle` function to distribute rewards.
+
+#### Required ABI Interface
+
+```solidity
+function owner() external view returns (address);
+function endCycle(address[] calldata recipients, uint256[] calldata amounts) external;
+```
+
 ## License
 
 MIT

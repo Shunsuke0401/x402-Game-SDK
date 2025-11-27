@@ -360,6 +360,47 @@ Secure admin endpoints with a token:
 ADMIN_TOKEN=your-very-secure-random-token
 ```
 
+## Payout System
+
+The SDK includes a `PayoutService` that automates the distribution of prize pools to leaderboard winners.
+
+### PayoutService
+
+The `PayoutService` runs as a background task (or can be triggered manually) to:
+1.  Fetch the daily leaderboard.
+2.  Calculate rewards based on a `PayoutStrategy`.
+3.  Execute an on-chain transaction to the Prize Pool contract to distribute funds.
+
+By default, it uses a strategy that distributes 0.001 USDC (configurable) to the top 3 players:
+-   1st Place: 50%
+-   2nd Place: 30%
+-   3rd Place: 20%
+
+You can customize this by providing your own `PayoutStrategy` implementation.
+
+### Smart Contract Requirements
+
+To use the automated payout system, you need a smart contract deployed on Base (or Base Sepolia) that adheres to the following interface:
+
+1.  **Ownership**: The contract must have an `owner()` function. The wallet used by the `PayoutService` (configured via `PRIVATE_KEY`) must be the owner of the contract.
+2.  **End Cycle Function**: The contract must implement an `endCycle` function to distribute rewards.
+
+#### Required ABI Interface
+
+```solidity
+function owner() external view returns (address);
+function endCycle(address[] calldata recipients, uint256[] calldata amounts) external;
+```
+
+#### Example Contract (`PrizePool.sol`)
+
+A reference implementation is available in `contracts/PrizePool.sol`. It should handle:
+-   Storing funds (USDC).
+-   Verifying the caller is the owner.
+-   Batch transferring tokens to the provided recipients.
+
+**Note**: Ensure your `PRIZE_POOL_CONTRACT` address in `.env` points to a deployed instance of this contract, and your `PRIVATE_KEY` corresponds to the contract owner.
+
 ## Advanced Topics
 
 ### Custom Payout Strategies
