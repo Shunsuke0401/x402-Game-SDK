@@ -89,58 +89,16 @@ function App() {
 }
 ```
 
+## Example App
+
+Check out the **Tetris 402** sample application to see the SDK in action:
+[Tetris 402 Repository](https://github.com/Shunsuke0401/g402-Tetris)
+
 ## Configuration
 
 Create a `.env` file in your project root. You can use `.env.example` as a template:
 
-```env
-# Server Configuration
-PORT=3001
 
-# Network Configuration
-CDP_NETWORK=base                    # or base-sepolia for testnet
-ENTRY_FEE_USDC=0.001
-
-# Payout Configuration
-SANDBOX_MODE=true                   # Set to false in production
-ENABLE_ONCHAIN_PAYOUTS=true
-PAYOUT_INTERVAL_MS=86400000         # 24 hours in milliseconds
-
-# Blockchain Configuration
-CDP_RECIPIENT_ADDRESS=0x...         # Your wallet address
-PRIZE_POOL_CONTRACT=0x...           # Prize pool contract address
-PRIVATE_KEY=0x...                   # Private key for signing transactions
-
-# RPC Configuration (optional)
-BASE_RPC_URL=https://...
-# BASE_WS_URL=wss://...
-
-# Security
-ADMIN_TOKEN=your-secure-admin-token
-CORS_ORIGINS=http://localhost:4174  # Comma-separated list of allowed origins
-
-# Facilitator Configuration
-FACILITATOR_URL=https://x402.org/facilitator
-
-# Coinbase API Keys (only for mainnet)
-CDP_API_KEY_ID=
-CDP_API_KEY_SECRET=
-```
-
-### Environment Variables Explained
-
-- **PORT**: The port your server will run on
-- **CDP_NETWORK**: Network to use (`base` for mainnet, `base-sepolia` for testnet)
-- **ENTRY_FEE_USDC**: Entry fee in USDC (e.g., 0.001 = $0.001)
-- **SANDBOX_MODE**: When true, simulates payments without actual blockchain transactions
-- **ENABLE_ONCHAIN_PAYOUTS**: Enable automatic on-chain prize distribution
-- **PAYOUT_INTERVAL_MS**: How often to check and distribute prizes (in milliseconds)
-- **CDP_RECIPIENT_ADDRESS**: Wallet address that receives payments
-- **PRIZE_POOL_CONTRACT**: Address of the deployed prize pool contract
-- **PRIVATE_KEY**: Private key for the wallet that signs payout transactions
-- **ADMIN_TOKEN**: Secret token for admin endpoints (set a strong value in production)
-- **CORS_ORIGINS**: Allowed frontend domains (avoid `*` in production)
-- **FACILITATOR_URL**: URL of the x402 facilitator service
 
 ## Server Setup
 
